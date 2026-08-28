@@ -6,6 +6,17 @@
 
 这是**软件在环控制验证**，不是相机视觉验证：`/sim/tag_pose` 根据 Gazebo `/odom` 与场景中 Tag 的已知位置计算，代表“理想的模拟传感器”。它不使用相机、没有图像、没有 AprilTag 检测算法，也不能证明真实镜头、光照、标定或识别率。
 
+## VMware 本机通信设置
+
+本项目当前在同一台 VMware Ubuntu 虚拟机内启动多个 ROS 2 进程。若终端曾显示“发送组播消息：网络不可达”，请在**每个**参与本步骤的终端、`source` ROS 2 后执行：
+
+```bash
+export ROS_LOCALHOST_ONLY=1
+export ROS_DOMAIN_ID=42
+```
+
+这使 DDS（ROS 2 的进程发现和传输层）只走虚拟机本机通信，并让所有终端处于同一 ROS 域。Jazzy 会显示弃用提醒，但该设置在当前环境仍有效；它不修改系统配置，关闭终端后失效。
+
 ## 启动前重置场景
 
 请在当前 Gazebo 启动终端按 `Ctrl+C`，再按下面步骤重启。重启会让机器人回到原点，并加载新增的 Tag 板与模拟 Tag 位姿节点；不会删除项目文件。
@@ -15,6 +26,9 @@
 ```bash
 source /opt/ros/jazzy/setup.bash
 cd /mnt/hgfs/robot_project
+
+export ROS_LOCALHOST_ONLY=1
+export ROS_DOMAIN_ID=42
 
 BUILD_ROOT="$HOME/robot_ws_build"
 
@@ -37,7 +51,7 @@ Publishing synthetic TagPose on /sim/tag_pose from Gazebo odometry.
 
 保持此终端运行。
 
-`parking_controller` 使用 ROS 2 的 `ament_cmake_python` 安装规则，因此编译成功后会生成 `local_setup.bash`。该脚本为当前终端添加该包的位置和 Python 依赖路径；若构建失败，它不会出现，后续终端也不应继续启动控制器。
+`parking_controller` 现在使用 ROS 2 的 `ament_cmake` 和 `rclcpp_action`。编译成功后会生成 `local_setup.bash`，为当前终端添加 C++ 节点和依赖包的位置；若构建失败，它不会出现，后续终端也不应继续启动控制器。
 
 ## 终端 B：启动泊车控制器
 
@@ -45,6 +59,9 @@ Publishing synthetic TagPose on /sim/tag_pose from Gazebo odometry.
 
 ```bash
 source /opt/ros/jazzy/setup.bash
+
+export ROS_LOCALHOST_ONLY=1
+export ROS_DOMAIN_ID=42
 
 BUILD_ROOT="$HOME/robot_ws_build"
 source "$BUILD_ROOT/install/robot_interfaces/share/robot_interfaces/local_setup.bash"
@@ -56,7 +73,7 @@ ros2 launch parking_controller parking_controller.launch.py
 `ParkToTag` 是 **Action**：与一次性消息不同，它能在任务进行中返回状态、允许取消，并在结束时给出成功或失败结果。控制器启动时应显示：
 
 ```text
-Parking controller ready; waiting for TagPose on /sim/tag_pose.
+C++ parking controller ready; waiting for TagPose on /sim/tag_pose.
 ```
 
 ## 终端 C：提交并验证泊车任务
@@ -66,6 +83,9 @@ Parking controller ready; waiting for TagPose on /sim/tag_pose.
 ```bash
 source /opt/ros/jazzy/setup.bash
 cd /mnt/hgfs/robot_project
+
+export ROS_LOCALHOST_ONLY=1
+export ROS_DOMAIN_ID=42
 
 BUILD_ROOT="$HOME/robot_ws_build"
 source "$BUILD_ROOT/install/robot_interfaces/share/robot_interfaces/local_setup.bash"
@@ -94,6 +114,9 @@ PASS: simulated ParkToTag action completed within the requested tolerances.
 ```bash
 source /opt/ros/jazzy/setup.bash
 cd /mnt/hgfs/robot_project
+
+export ROS_LOCALHOST_ONLY=1
+export ROS_DOMAIN_ID=42
 
 BUILD_ROOT="$HOME/robot_ws_build"
 source "$BUILD_ROOT/install/robot_interfaces/share/robot_interfaces/local_setup.bash"

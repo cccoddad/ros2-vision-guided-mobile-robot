@@ -27,7 +27,7 @@ The planned C++ packages are:
 The existing Python packages are intentionally retained as software-in-the-loop references:
 
 - `base_driver_mock`: mock base feedback and timeout behavior.
-- `parking_controller`: early control-math and state-machine prototype.
+- `parking_controller`: C++ `ParkToTag` Action runtime; retained Python source is a migration reference and is not installed as a runtime node.
 - `robot_simulation`: Gazebo bridging and simulated Tag pose helper.
 
 They may be improved only for simulation, testing, or migration support. Real UART/CAN access, real motor control, physical safety behavior, and final parking logic must move to C++ before hardware delivery.

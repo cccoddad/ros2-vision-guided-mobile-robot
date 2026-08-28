@@ -22,7 +22,7 @@ SIL（Software-in-the-Loop，软件在环）是指用软件模拟底盘、传感
 | `robot_interfaces` | 自定义消息与 Action | `BaseStatus` 与 `ParkToTag` 接口 |
 | `base_driver` | 真实 STM32 通信、里程计 | C++ 接口骨架已实现；当前仅发布禁用状态，不访问硬件 |
 | `base_driver_mock` | 模拟底盘与故障 | 发布模拟 `/odom`、`/base_status` |
-| `parking_controller` | 搜索、对齐、接近与停车 | 已实现 `ParkToTag` Action 与模拟 Tag 位姿闭环；真实检测器适配后续实现 |
+| `parking_controller` | 搜索、对齐、接近与停车 | C++ `ParkToTag` Action；兼容模拟 Tag 位姿，真实检测器适配后续实现 |
 | `robot_bringup` | 启动编排与参数 | 仿真/硬件配置分离 |
 | `robot_simulation` | Gazebo 世界、插件、故障注入 | 已提供虚拟差速车、停车线、障碍物、模拟 Tag 板和 ROS 2 桥接 |
 

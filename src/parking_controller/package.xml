@@ -2,14 +2,19 @@
 <package format="3">
   <name>parking_controller</name>
   <version>0.1.0</version>
-  <description>Action-based AprilTag parking controller for software-in-the-loop simulation.</description>
+  <description>C++ ParkToTag Action controller with simulation-compatible inputs.</description>
   <maintainer email="maintainer@example.com">Robot Project</maintainer>
   <license>Apache-2.0</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
-  <buildtool_depend>ament_cmake_python</buildtool_depend>
   <depend>geometry_msgs</depend>
-  <depend>rclpy</depend>
+  <depend>rclcpp</depend>
+  <depend>rclcpp_action</depend>
   <depend>robot_interfaces</depend>
 
+  <test_depend>ament_cmake_gtest</test_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
 </package>
