@@ -35,13 +35,13 @@ class TagLossVerifier(Node):
         ])
         rclpy.spin_until_future_complete(self, future, timeout_sec=3.0)
         response = future.result()
-        return response is not None and all(item.successful for item in response.values)
+        return response is not None and all(item.successful for item in response.results)
 
     def run(self) -> int:
         if not self._action_client.wait_for_server(timeout_sec=5.0):
             print('FAIL: /park_to_tag action server was unavailable.', file=sys.stderr)
             return 2
-        if not self._tag_parameter_client.wait_for_service(timeout_sec=5.0):
+        if not self._tag_parameter_client.wait_for_services(timeout_sec=5.0):
             print('FAIL: simulated TagPose parameter service was unavailable.', file=sys.stderr)
             return 3
         if not self.set_tag_enabled(True):
@@ -107,7 +107,7 @@ def main() -> None:
     try:
         exit_code = node.run()
     finally:
-        if node._tag_parameter_client.service_is_ready():
+        if node._tag_parameter_client.services_are_ready():
             node.set_tag_enabled(True)
         node.destroy_node()
         rclpy.shutdown()
