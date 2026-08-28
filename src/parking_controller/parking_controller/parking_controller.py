@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """ParkToTag action server for structured simulated or real tag-pose inputs."""
 
 import math
@@ -12,7 +13,12 @@ from rclpy.node import Node
 from robot_interfaces.action import ParkToTag
 from robot_interfaces.msg import TagPose
 
-from .control_math import calculate_command, distance_to_tag_m, normalize_angle, pose_is_within_tolerance
+from parking_controller.control_math import (
+    calculate_command,
+    distance_to_tag_m,
+    normalize_angle,
+    pose_is_within_tolerance,
+)
 
 
 STATE_WAITING_FOR_TAG = 1

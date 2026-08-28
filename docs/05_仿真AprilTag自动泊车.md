@@ -37,6 +37,8 @@ Publishing synthetic TagPose on /sim/tag_pose from Gazebo odometry.
 
 保持此终端运行。
 
+`parking_controller` 使用 ROS 2 的 `ament_cmake_python` 安装规则，因此编译成功后会生成 `local_setup.bash`。该脚本为当前终端添加该包的位置和 Python 依赖路径；若构建失败，它不会出现，后续终端也不应继续启动控制器。
+
 ## 终端 B：启动泊车控制器
 
 新开终端标签页后执行：

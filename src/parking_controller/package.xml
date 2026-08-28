@@ -6,12 +6,10 @@
   <maintainer email="maintainer@example.com">Robot Project</maintainer>
   <license>Apache-2.0</license>
 
-  <buildtool_depend>ament_python</buildtool_depend>
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  <buildtool_depend>ament_cmake_python</buildtool_depend>
   <depend>geometry_msgs</depend>
   <depend>rclpy</depend>
   <depend>robot_interfaces</depend>
 
-  <export>
-    <build_type>ament_python</build_type>
-  </export>
 </package>
