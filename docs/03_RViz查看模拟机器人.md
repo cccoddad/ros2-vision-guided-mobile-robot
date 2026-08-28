@@ -25,17 +25,17 @@ source /opt/ros/jazzy/setup.bash
 cd /mnt/hgfs/robot_project
 
 BUILD_ROOT="$HOME/robot_ws_build"
-source "$BUILD_ROOT/install/setup.bash" && \
 colcon --log-base "$BUILD_ROOT/log" build \
   --build-base "$BUILD_ROOT/build" \
   --install-base "$BUILD_ROOT/install" \
   --packages-select robot_description \
   --event-handlers console_direct+ && \
-source "$BUILD_ROOT/install/setup.bash" && \
+source "$BUILD_ROOT/install/robot_description/share/robot_description/local_setup.bash" && \
+ros2 pkg prefix robot_description && \
 ros2 launch robot_description rviz.launch.py
 ```
 
-成功后会打开 RViz 窗口。蓝色车体、黑色车轮与橙色相机块是模型；网格是 `odom` 平面；坐标轴表示 TF；红色箭头来自 `/odom`。
+`ros2 pkg prefix robot_description` 会先显示类似 `/home/china/robot_ws_build/install/robot_description` 的安装路径，随后打开 RViz 窗口。蓝色车体、黑色车轮与橙色相机块是模型；网格是 `odom` 平面；坐标轴表示 TF；红色箭头来自 `/odom`。
 
 术语说明：
 
@@ -43,6 +43,7 @@ ros2 launch robot_description rviz.launch.py
 - **`robot_state_publisher`**：读取 URDF 并发布机器人各部件之间固定坐标关系的 ROS 2 节点。
 - **`odom`**：里程计坐标系，表示模拟底盘从启动位置开始的相对位姿。
 - **`base_link`**：机器人本体的中心坐标系；模拟底盘发布 `odom -> base_link`，RViz 因此能让模型移动。
+- **`local_setup.bash`**：某个 ROS 2 软件包自己的环境脚本。这里直接加载刚安装的 `robot_description`，避免旧的工作区总环境脚本遗漏新包。
 
 ## 终端 C：让模型运动
 
@@ -50,7 +51,6 @@ ros2 launch robot_description rviz.launch.py
 
 ```bash
 source /opt/ros/jazzy/setup.bash
-source "$HOME/robot_ws_build/install/setup.bash"
 
 timeout 4s ros2 topic pub --rate 20 /cmd_vel geometry_msgs/msg/Twist "{linear: {x: 0.10}, angular: {z: 0.30}}"
 ```
