@@ -1,0 +1,22 @@
+# ROS 2 / colcon generated files
+build/
+install/
+log/
+
+# Python generated files
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# IDE and local environment files
+.vscode/
+.idea/
+.env
+
+# Local render and test artifacts; source documents in output/ remain trackable.
+qa_plan/
+qa_purchase/
+tmp_resume_render/
+test_results/*.bag
+test_results/*.db3
+test_results/*.mcap

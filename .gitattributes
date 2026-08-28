@@ -1,0 +1,6 @@
+# This repository is built in Ubuntu but stored on a Windows shared folder.
+# Keep source and configuration files stable across both environments.
+* text=auto eol=lf
+*.docx binary
+*.png binary
+*.pdf binary

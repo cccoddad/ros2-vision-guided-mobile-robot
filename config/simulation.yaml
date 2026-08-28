@@ -1,0 +1,29 @@
+# 名义参数，仅用于硬件到货前的仿真与单元测试。
+# 所有带 TODO 的值必须在实车测量后写入 calibration.yaml，不能当作真实标定结果。
+robot:
+  base_frame: base_link
+  odom_frame: odom
+  wheel_radius_m: 0.032  # TODO: 实测轮胎受压后的有效半径
+  wheel_separation_m: 0.180  # TODO: 实测左右轮接地点间距
+  max_linear_speed_mps: 0.20
+  max_angular_speed_rps: 0.80
+  max_linear_accel_mps2: 0.25
+  max_angular_accel_rps2: 1.00
+
+camera:
+  frame: camera_link
+  optical_frame: camera_optical_frame
+  # TODO: 根据实际支架和相机标定结果更新
+  xyz_m: [0.10, 0.0, 0.16]
+  rpy_rad: [0.0, 0.0, 0.0]
+
+parking:
+  tag_id: 0
+  desired_distance_m: 0.35
+  lateral_tolerance_m: 0.03
+  yaw_tolerance_rad: 0.08
+  tag_confirm_frames: 5
+  tag_loss_frames: 5
+  detection_max_age_s: 0.20
+  search_timeout_s: 20.0
+  task_timeout_s: 60.0

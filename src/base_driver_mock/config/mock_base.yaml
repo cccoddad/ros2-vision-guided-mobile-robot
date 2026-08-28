@@ -1,0 +1,12 @@
+base_driver_mock:
+  ros__parameters:
+    update_rate_hz: 50.0
+    command_timeout_s: 0.3
+    wheel_separation_m: 0.18
+    max_linear_speed_mps: 0.20
+    max_angular_speed_rps: 0.80
+    max_linear_accel_mps2: 0.25
+    max_angular_accel_rps2: 1.00
+    battery_voltage: 12.0
+    odom_frame: odom
+    base_frame: base_link

@@ -1,0 +1,24 @@
+# Goal: target AprilTag and acceptable final pose tolerances.
+int32 tag_id
+float32 desired_distance_m
+float32 lateral_tolerance_m
+float32 yaw_tolerance_rad
+float32 timeout_s
+---
+# Result: task outcome and measured final error.
+bool success
+uint8 failure_code
+float32 final_distance_m
+float32 final_lateral_error_m
+float32 final_yaw_error_rad
+float32 elapsed_time_s
+---
+# Feedback: controller state and latest target-relative estimate.
+uint8 state
+bool tag_visible
+float32 relative_x_m
+float32 relative_y_m
+float32 relative_yaw_rad
+float32 command_linear_mps
+float32 command_angular_rps
+uint32 retry_count
