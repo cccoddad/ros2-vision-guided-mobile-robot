@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+<robot name="mock_mobile_robot">
+  <material name="chassis_blue">
+    <color rgba="0.10 0.35 0.80 1.0"/>
+  </material>
+  <material name="wheel_black">
+    <color rgba="0.06 0.06 0.06 1.0"/>
+  </material>
+  <material name="sensor_orange">
+    <color rgba="0.95 0.35 0.05 1.0"/>
+  </material>
+
+  <link name="base_link">
+    <visual>
+      <origin xyz="0 0 0.075" rpy="0 0 0"/>
+      <geometry><box size="0.32 0.24 0.15"/></geometry>
+      <material name="chassis_blue"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0.075" rpy="0 0 0"/>
+      <geometry><box size="0.32 0.24 0.15"/></geometry>
+    </collision>
+  </link>
+
+  <link name="left_wheel_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="1.5708 0 0"/>
+      <geometry><cylinder radius="0.045" length="0.030"/></geometry>
+      <material name="wheel_black"/>
+    </visual>
+  </link>
+  <joint name="left_wheel_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="left_wheel_link"/>
+    <origin xyz="0 0.135 0.045" rpy="0 0 0"/>
+  </joint>
+
+  <link name="right_wheel_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="1.5708 0 0"/>
+      <geometry><cylinder radius="0.045" length="0.030"/></geometry>
+      <material name="wheel_black"/>
+    </visual>
+  </link>
+  <joint name="right_wheel_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="right_wheel_link"/>
+    <origin xyz="0 -0.135 0.045" rpy="0 0 0"/>
+  </joint>
+
+  <link name="caster_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry><sphere radius="0.030"/></geometry>
+      <material name="wheel_black"/>
+    </visual>
+  </link>
+  <joint name="caster_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="caster_link"/>
+    <origin xyz="-0.120 0 0.030" rpy="0 0 0"/>
+  </joint>
+
+  <link name="camera_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry><box size="0.060 0.080 0.050"/></geometry>
+      <material name="sensor_orange"/>
+    </visual>
+  </link>
+  <joint name="camera_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="camera_link"/>
+    <origin xyz="0.100 0 0.190" rpy="0 0 0"/>
+  </joint>
+</robot>
