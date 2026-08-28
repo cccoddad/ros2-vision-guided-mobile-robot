@@ -1,0 +1,10 @@
+base_driver:
+  ros__parameters:
+    # This initial C++ node is intentionally unable to access a real transport.
+    transport_mode: disabled
+    update_rate_hz: 20.0
+    command_timeout_s: 0.3
+    max_linear_speed_mps: 0.20
+    max_angular_speed_rps: 0.80
+    battery_voltage: 0.0
+    base_frame: base_link
