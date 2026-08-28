@@ -8,4 +8,9 @@ install(
   DESTINATION share/${PROJECT_NAME}
 )
 
+install(
+  PROGRAMS robot_simulation/sim_tag_pose.py
+  DESTINATION lib/${PROJECT_NAME}
+)
+
 ament_package()

@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>parking_controller</name>
+  <version>0.1.0</version>
+  <description>Action-based AprilTag parking controller for software-in-the-loop simulation.</description>
+  <maintainer email="maintainer@example.com">Robot Project</maintainer>
+  <license>Apache-2.0</license>
+
+  <buildtool_depend>ament_python</buildtool_depend>
+  <depend>geometry_msgs</depend>
+  <depend>rclpy</depend>
+  <depend>robot_interfaces</depend>
+
+  <export>
+    <build_type>ament_python</build_type>
+  </export>
+</package>

@@ -43,6 +43,22 @@
       </link>
     </model>
 
+    <model name="apriltag_0_simulated">
+      <static>true</static>
+      <pose>1.50 0 0.42 0 1.5708 0</pose>
+      <link name="link">
+        <visual name="black_tag_board">
+          <geometry><box><size>0.01 0.30 0.30</size></box></geometry>
+          <material><ambient>0.02 0.02 0.02 1</ambient><diffuse>0.02 0.02 0.02 1</diffuse></material>
+        </visual>
+        <visual name="white_tag_center">
+          <pose>-0.006 0 0 0 0 0</pose>
+          <geometry><box><size>0.012 0.16 0.16</size></box></geometry>
+          <material><ambient>0.95 0.95 0.95 1</ambient><diffuse>0.95 0.95 0.95 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
     <model name="safety_obstacle">
       <static>true</static>
       <pose>0.8 -0.8 0.15 0 0 0</pose>

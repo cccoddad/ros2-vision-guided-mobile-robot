@@ -22,13 +22,13 @@ SIL（Software-in-the-Loop，软件在环）是指用软件模拟底盘、传感
 | `robot_interfaces` | 自定义消息与 Action | `BaseStatus` 与 `ParkToTag` 接口 |
 | `base_driver` | 真实 STM32 通信、里程计 | 后续硬件到货后实现 |
 | `base_driver_mock` | 模拟底盘与故障 | 发布模拟 `/odom`、`/base_status` |
-| `parking_controller` | 搜索、对齐、接近与停车 | 通过模拟 Tag 位姿完成闭环 |
+| `parking_controller` | 搜索、对齐、接近与停车 | 已实现 `ParkToTag` Action 与模拟 Tag 位姿闭环；真实检测器适配后续实现 |
 | `robot_bringup` | 启动编排与参数 | 仿真/硬件配置分离 |
-| `robot_simulation` | Gazebo 世界、插件、故障注入 | 已提供虚拟差速车、停车线、障碍物和 ROS 2 桥接；AprilTag 场景后续加入 |
+| `robot_simulation` | Gazebo 世界、插件、故障注入 | 已提供虚拟差速车、停车线、障碍物、模拟 Tag 板和 ROS 2 桥接 |
 
 ## 从这里开始
 
-开发环境已验证后，先按 [第 2 步：编译并验证模拟底盘](docs/02_编译并验证模拟底盘.md) 启动无硬件的 ROS 2 底盘，再按 [第 3 步：在 RViz 查看模拟机器人](docs/03_RViz查看模拟机器人.md) 查看模型与运动，最后按 [第 4 步：在 Gazebo 运行物理仿真](docs/04_Gazebo物理仿真.md) 运行带物理效果的虚拟场景。
+开发环境已验证后，先按 [第 2 步：编译并验证模拟底盘](docs/02_编译并验证模拟底盘.md) 启动无硬件的 ROS 2 底盘，再按 [第 3 步：在 RViz 查看模拟机器人](docs/03_RViz查看模拟机器人.md) 查看模型与运动，按 [第 4 步：在 Gazebo 运行物理仿真](docs/04_Gazebo物理仿真.md) 验证物理运动，最后按 [第 5 步：验证仿真 AprilTag 自动泊车](docs/05_仿真AprilTag自动泊车.md) 验证泊车控制闭环。
 
 ## 目录说明
 
