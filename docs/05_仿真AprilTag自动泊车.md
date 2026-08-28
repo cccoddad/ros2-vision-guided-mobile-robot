@@ -87,6 +87,28 @@ PASS: simulated ParkToTag action completed within the requested tolerances.
 - `2`：任务超过目标中的 `30 s` 时限；
 - `3`：客户端取消任务。
 
+## 自动验证 Tag 丢失停车
+
+正常泊车成功后，保持 Gazebo 和控制器两个终端运行。在新终端执行：
+
+```bash
+source /opt/ros/jazzy/setup.bash
+cd /mnt/hgfs/robot_project
+
+BUILD_ROOT="$HOME/robot_ws_build"
+source "$BUILD_ROOT/install/robot_interfaces/share/robot_interfaces/local_setup.bash"
+
+python3 scripts/verify_tag_loss_stop.py
+```
+
+脚本在任务开始 1 秒后将模拟 Tag 位姿开关设为关闭。控制器应在 `0.5 s` 后因 Tag 超时中止，最后恢复该开关，以便之后继续正常测试。成功标志为：
+
+```text
+PASS: Tag loss aborted parking and Gazebo odometry settled at zero speed.
+```
+
+这验证的是控制器面对**模拟**感知丢失的停车行为，不代表真实相机断流、真实通信故障或 STM32 急停已经验证。
+
 术语说明：
 
 - **TagPose**：单个 Tag 的编号和相对于机器人的位置、朝向；坐标系为 `base_link`。

@@ -16,6 +16,7 @@ class SimTagPosePublisher(Node):
         self.declare_parameter('tag_x_m', 1.5)
         self.declare_parameter('tag_y_m', 0.0)
         self.declare_parameter('tag_yaw_rad', math.pi)
+        self.declare_parameter('enabled', True)
         self._tag_id = int(self.get_parameter('tag_id').value)
         self._tag_x_m = float(self.get_parameter('tag_x_m').value)
         self._tag_y_m = float(self.get_parameter('tag_y_m').value)
@@ -25,6 +26,8 @@ class SimTagPosePublisher(Node):
         self.get_logger().info('Publishing synthetic TagPose on /sim/tag_pose from Gazebo odometry.')
 
     def _on_odometry(self, odometry: Odometry) -> None:
+        if not self.get_parameter('enabled').value:
+            return
         position = odometry.pose.pose.position
         orientation = odometry.pose.pose.orientation
         robot_yaw = math.atan2(
