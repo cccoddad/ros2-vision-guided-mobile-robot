@@ -47,14 +47,27 @@ ros2 launch robot_simulation gazebo.launch.py
 - **ROS-Gazebo 桥接**：`ros_gz_bridge` 在 ROS 2 消息与 Gazebo 消息之间转换；本项目只桥接 `/cmd_vel`、`/odom` 和 `/clock`。
 - **`/clock`**：仿真时间话题。需要以仿真时间运行的节点可使用它；本步骤不把它当作真实时间。
 
-## 发送测试运动
+## 自动验证仿真运动
 
 Gazebo 打开后，再新开一个终端并执行：
 
 ```bash
 source /opt/ros/jazzy/setup.bash
+cd /mnt/hgfs/robot_project
 
-timeout 5s ros2 topic pub --rate 20 /cmd_vel geometry_msgs/msg/Twist "{linear: {x: 0.10}, angular: {z: 0.25}}"
+python3 scripts/verify_gazebo_motion.py
 ```
 
-机器人应在 Gazebo 中前进并向左转 5 秒。`timeout` 自动停止发消息；Gazebo 中没有额外的超时停车插件，因此这一步只用于受控演示，不能作为真实底盘安全功能的验证。
+脚本会等待 `/odom`，记录起点，发送 4 秒前进加左转命令，再记录终点。成功时应显示：
+
+```text
+PASS: Gazebo received /cmd_vel and published changing /odom.
+```
+
+它还会打印位移和转角，因此无需依靠远景肉眼判断。脚本最后会发送零速度命令，但 Gazebo 中没有额外的命令超时停车插件；这项测试只验证仿真通信和运动，不代表真实底盘安全功能已验证。
+
+术语说明：
+
+- **位移**：起点与终点之间的直线距离，单位为米。
+- **转角（yaw）**：机器人绕竖直轴的朝向变化，单位为弧度。
+- **阈值**：判断“确实移动”的最低数值；本脚本默认至少移动 `0.20` 米且至少转动 `0.20` 弧度。
