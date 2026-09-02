@@ -45,6 +45,9 @@ target_include_directories(driver_health INTERFACE
 )
 target_link_libraries(driver_health INTERFACE base_status_receiver)
 
+add_library(command_frame_encoder src/command_frame_encoder.cpp)
+target_link_libraries(command_frame_encoder PUBLIC base_transport robot_protocol)
+
 add_executable(base_driver_node src/base_driver_node.cpp)
 target_link_libraries(base_driver_node command_watchdog)
 ament_target_dependencies(base_driver_node
@@ -78,6 +81,9 @@ if(BUILD_TESTING)
 
   ament_add_gtest(test_driver_health test/test_driver_health.cpp)
   target_link_libraries(test_driver_health driver_health)
+
+  ament_add_gtest(test_command_frame_encoder test/test_command_frame_encoder.cpp)
+  target_link_libraries(test_command_frame_encoder command_frame_encoder)
 endif()
 
 ament_package()
