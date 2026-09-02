@@ -38,6 +38,13 @@ add_library(base_status_receiver src/base_status_receiver.cpp)
 target_link_libraries(base_status_receiver PUBLIC base_transport robot_protocol)
 ament_target_dependencies(base_status_receiver PUBLIC robot_interfaces)
 
+add_library(driver_health INTERFACE)
+target_include_directories(driver_health INTERFACE
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>
+)
+target_link_libraries(driver_health INTERFACE base_status_receiver)
+
 add_executable(base_driver_node src/base_driver_node.cpp)
 target_link_libraries(base_driver_node command_watchdog)
 ament_target_dependencies(base_driver_node
@@ -68,6 +75,9 @@ if(BUILD_TESTING)
 
   ament_add_gtest(test_base_status_receiver test/test_base_status_receiver.cpp)
   target_link_libraries(test_base_status_receiver base_status_receiver)
+
+  ament_add_gtest(test_driver_health test/test_driver_health.cpp)
+  target_link_libraries(test_driver_health driver_health)
 endif()
 
 ament_package()
