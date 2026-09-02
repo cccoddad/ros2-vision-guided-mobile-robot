@@ -30,6 +30,20 @@
 
 **`SET_TWIST` 只表达期望车体速度，绝不表达裸 PWM。** STM32 仍是急停、通信超时、PWM 禁用和硬件故障处理的最终权威。
 
+### SIL 专用 `BASE_STATUS` 测试负载
+
+`base_driver` 的 C++ FakeTransport 单元测试使用以下 11 字节负载验证 C 帧解码、状态映射和故障处理。这**不是** STM32 V1 硬件协议的冻结字段；硬件规格、编码器和驱动器故障定义确定后，必须经接口评审后再替换。
+
+| 偏移 | 字节 | SIL 测试含义 |
+| ---: | ---: | --- |
+| 0 | 2 | `int16 left_wheel_speed_mmps`，小端、有符号 |
+| 2 | 2 | `int16 right_wheel_speed_mmps`，小端、有符号 |
+| 4 | 2 | `uint16 battery_voltage_mv`，小端 |
+| 6 | 4 | `uint32 fault_flags`，小端，原样映射到 `BaseStatus` |
+| 10 | 1 | `0` 为未急停，`1` 为急停，映射到 `BaseStatus.estop_active` |
+
+FakeTransport 仅在进程内存中提供测试帧，不访问串口、CAN、STM32 或电机。C++ 接收器必须拒绝 CRC 损坏帧、非连续序号和非法负载；仅有效状态帧会刷新通信超时计时器。
+
 ## 纯 C 编解码器和测试
 
 - [include/robot_protocol.h](include/robot_protocol.h)：无动态内存的 C API；

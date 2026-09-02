@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.8)
-project(base_driver)
+project(base_driver LANGUAGES C CXX)
 
 if(NOT CMAKE_CXX_STANDARD)
   set(CMAKE_CXX_STANDARD 17)
@@ -21,6 +21,22 @@ target_include_directories(base_transport INTERFACE
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>
 )
+
+add_library(robot_protocol STATIC
+  ${CMAKE_CURRENT_SOURCE_DIR}/../../protocol/src/robot_protocol.c
+)
+set_target_properties(robot_protocol PROPERTIES
+  C_STANDARD 11
+  C_STANDARD_REQUIRED ON
+  C_EXTENSIONS OFF
+)
+target_include_directories(robot_protocol PUBLIC
+  ${CMAKE_CURRENT_SOURCE_DIR}/../../protocol/include
+)
+
+add_library(base_status_receiver src/base_status_receiver.cpp)
+target_link_libraries(base_status_receiver PUBLIC base_transport robot_protocol)
+ament_target_dependencies(base_status_receiver PUBLIC robot_interfaces)
 
 add_executable(base_driver_node src/base_driver_node.cpp)
 target_link_libraries(base_driver_node command_watchdog)
@@ -49,6 +65,9 @@ if(BUILD_TESTING)
 
   ament_add_gtest(test_fake_transport test/test_fake_transport.cpp)
   target_link_libraries(test_fake_transport base_transport)
+
+  ament_add_gtest(test_base_status_receiver test/test_base_status_receiver.cpp)
+  target_link_libraries(test_base_status_receiver base_status_receiver)
 endif()
 
 ament_package()
