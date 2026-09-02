@@ -41,5 +41,5 @@ SIL（Software-in-the-Loop，软件在环）是指用软件模拟底盘、传感
 - `launch/`：启动文件。
 - `protocol/`：上位机与 STM32 通信约定。
 - `hardware/`：到货后的接线图、数据表和资产记录。
-- `test_results/`：正式测试的 CSV、日志索引和报告。
+- `test_results/`：正式测试的 CSV、日志索引和报告；见 [测试证据索引](test_results/README.md)。
 - `docs/`：开发和复现说明。

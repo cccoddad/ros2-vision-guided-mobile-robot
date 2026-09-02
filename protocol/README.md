@@ -44,6 +44,8 @@
 
 FakeTransport 仅在进程内存中提供测试帧，不访问串口、CAN、STM32 或电机。C++ 接收器必须拒绝 CRC 损坏帧、非连续序号和非法负载；仅有效状态帧会刷新通信超时计时器。
 
+真实硬件字段评审、故障位分配和冻结前置条件见 [BASE_STATUS_REVIEW_TEMPLATE.md](BASE_STATUS_REVIEW_TEMPLATE.md)。所有 SIL 与未来 HIL 结果应登记到 [../test_results/README.md](../test_results/README.md) 的证据索引。
+
 ## 纯 C 编解码器和测试
 
 - [include/robot_protocol.h](include/robot_protocol.h)：无动态内存的 C API；
