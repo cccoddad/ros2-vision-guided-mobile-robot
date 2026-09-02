@@ -48,7 +48,7 @@ FakeTransport 仅在进程内存中提供测试帧，不访问串口、CAN、STM
 
 - [include/robot_protocol.h](include/robot_protocol.h)：无动态内存的 C API；
 - [src/robot_protocol.c](src/robot_protocol.c)：CRC、完整帧编码和严格解码；
-- [test/test_robot_protocol.c](test/test_robot_protocol.c)：CRC 参考向量、速度帧往返、损坏 CRC、长度与版本拒绝。
+- [test/test_robot_protocol.c](test/test_robot_protocol.c)：CRC 参考向量、速度帧往返、损坏 CRC、长度与版本拒绝，以及确定性模糊输入和全帧单比特翻转回归。
 
 在 Ubuntu 或 STM32 工具链可用的 Linux 环境中，可在项目根目录运行：
 
