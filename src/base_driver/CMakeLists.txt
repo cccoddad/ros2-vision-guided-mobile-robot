@@ -16,6 +16,12 @@ target_include_directories(command_watchdog INTERFACE
   $<INSTALL_INTERFACE:include>
 )
 
+add_library(driver_configuration INTERFACE)
+target_include_directories(driver_configuration INTERFACE
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>
+)
+
 add_library(base_transport INTERFACE)
 target_include_directories(base_transport INTERFACE
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
@@ -49,7 +55,7 @@ add_library(command_frame_encoder src/command_frame_encoder.cpp)
 target_link_libraries(command_frame_encoder PUBLIC base_transport robot_protocol)
 
 add_executable(base_driver_node src/base_driver_node.cpp)
-target_link_libraries(base_driver_node command_watchdog)
+target_link_libraries(base_driver_node command_watchdog driver_configuration)
 ament_target_dependencies(base_driver_node
   geometry_msgs
   rclcpp
@@ -84,6 +90,9 @@ if(BUILD_TESTING)
 
   ament_add_gtest(test_command_frame_encoder test/test_command_frame_encoder.cpp)
   target_link_libraries(test_command_frame_encoder command_frame_encoder)
+
+  ament_add_gtest(test_driver_configuration test/test_driver_configuration.cpp)
+  target_link_libraries(test_driver_configuration driver_configuration)
 endif()
 
 ament_package()

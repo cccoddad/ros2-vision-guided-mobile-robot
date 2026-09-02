@@ -3,7 +3,6 @@
 #include <cstdint>
 #include <functional>
 #include <memory>
-#include <stdexcept>
 #include <string>
 
 #include "geometry_msgs/msg/twist.hpp"
@@ -11,6 +10,7 @@
 #include "robot_interfaces/msg/base_status.hpp"
 
 #include "base_driver/command_watchdog.hpp"
+#include "base_driver/driver_configuration.hpp"
 
 namespace
 {
@@ -29,33 +29,31 @@ public:
   BaseDriverNode()
   : Node("base_driver"), watchdog_(std::chrono::milliseconds(300))
   {
-    const auto update_rate_hz = declare_parameter<double>("update_rate_hz", 20.0);
-    const auto command_timeout_s = declare_parameter<double>("command_timeout_s", 0.3);
-    max_linear_speed_mps_ = declare_parameter<double>("max_linear_speed_mps", 0.20);
-    max_angular_speed_rps_ = declare_parameter<double>("max_angular_speed_rps", 0.80);
-    battery_voltage_ = declare_parameter<double>("battery_voltage", 0.0);
-    base_frame_ = declare_parameter<std::string>("base_frame", "base_link");
-    const auto transport_mode = declare_parameter<std::string>("transport_mode", "disabled");
-
-    if (update_rate_hz <= 0.0 || command_timeout_s <= 0.0 ||
-      max_linear_speed_mps_ <= 0.0 || max_angular_speed_rps_ <= 0.0)
-    {
-      throw std::invalid_argument("update rate, timeout, and speed limits must be positive");
-    }
-    if (transport_mode != "disabled") {
-      throw std::invalid_argument("only the disabled transport mode is implemented in this stage");
-    }
+    const base_driver::DriverConfiguration configuration{
+      declare_parameter<double>("update_rate_hz", 20.0),
+      declare_parameter<double>("command_timeout_s", 0.3),
+      declare_parameter<double>("max_linear_speed_mps", 0.20),
+      declare_parameter<double>("max_angular_speed_rps", 0.80),
+      declare_parameter<double>("battery_voltage", 0.0),
+      declare_parameter<std::string>("base_frame", "base_link"),
+      declare_parameter<std::string>("transport_mode", "disabled"),
+    };
+    configuration.validate();
+    max_linear_speed_mps_ = configuration.max_linear_speed_mps;
+    max_angular_speed_rps_ = configuration.max_angular_speed_rps;
+    battery_voltage_ = configuration.battery_voltage;
+    base_frame_ = configuration.base_frame;
 
     watchdog_ = base_driver::CommandWatchdog(
       std::chrono::duration_cast<std::chrono::nanoseconds>(
-        std::chrono::duration<double>(command_timeout_s)));
+        std::chrono::duration<double>(configuration.command_timeout_s)));
 
     status_publisher_ = create_publisher<robot_interfaces::msg::BaseStatus>("/base_status", 10);
     command_subscription_ = create_subscription<geometry_msgs::msg::Twist>(
       "/cmd_vel", 10,
       std::bind(&BaseDriverNode::on_command, this, std::placeholders::_1));
     timer_ = create_wall_timer(
-      std::chrono::duration<double>(1.0 / update_rate_hz),
+      std::chrono::duration<double>(1.0 / configuration.update_rate_hz),
       std::bind(&BaseDriverNode::publish_disabled_status, this));
 
     RCLCPP_WARN(
