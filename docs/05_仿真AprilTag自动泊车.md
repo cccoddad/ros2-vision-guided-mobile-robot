@@ -132,6 +132,55 @@ PASS: Tag loss aborted parking and Gazebo odometry settled at zero speed.
 
 这验证的是控制器面对**模拟**感知丢失的停车行为，不代表真实相机断流、真实通信故障或 STM32 急停已经验证。
 
+## 一键启动与 SIL 回归
+
+在确认前一轮 Gazebo 已停止后，可用下列两个终端运行停车回归。这个 launch 只启动 Gazebo、桥接、模拟 Tag 和 C++ `parking_controller`；它**不**启动 `base_driver`，因此不会接触真实传输或与 Gazebo 争用 `/cmd_vel`。
+
+终端 A：
+
+```bash
+source /opt/ros/jazzy/setup.bash
+cd /mnt/hgfs/robot_project
+
+export ROS_LOCALHOST_ONLY=1
+export ROS_DOMAIN_ID=42
+
+BUILD_ROOT="$HOME/robot_ws_build"
+colcon --log-base "$BUILD_ROOT/log" build \
+  --build-base "$BUILD_ROOT/build" \
+  --install-base "$BUILD_ROOT/install" \
+  --packages-up-to robot_simulation parking_controller \
+  --event-handlers console_direct+
+
+source "$BUILD_ROOT/install/robot_interfaces/share/robot_interfaces/local_setup.bash"
+source "$BUILD_ROOT/install/robot_simulation/share/robot_simulation/local_setup.bash"
+source "$BUILD_ROOT/install/parking_controller/share/parking_controller/local_setup.bash"
+ros2 pkg prefix robot_simulation
+ros2 launch robot_simulation sil_parking.launch.py
+```
+
+终端 B（等待终端 A 出现模拟 Tag 与控制器就绪日志后）：
+
+```bash
+source /opt/ros/jazzy/setup.bash
+cd /mnt/hgfs/robot_project
+
+export ROS_LOCALHOST_ONLY=1
+export ROS_DOMAIN_ID=42
+
+BUILD_ROOT="$HOME/robot_ws_build"
+source "$BUILD_ROOT/install/robot_interfaces/share/robot_interfaces/local_setup.bash"
+python3 scripts/run_sil_parking_regression.py
+```
+
+该回归按固定顺序运行正常泊车，再运行 Tag 丢失后停车；最后应输出：
+
+```text
+PASS: SIL parking regression completed normal parking and Tag-loss stop checks.
+```
+
+这仍是 Gazebo/SIL 测试。运行 `scripts/verify_gazebo_motion.py` 时应单独重启 Gazebo，以保留该运动测试自己的初始位姿和位移判据。
+
 术语说明：
 
 - **TagPose**：单个 Tag 的编号和相对于机器人的位置、朝向；坐标系为 `base_link`。
